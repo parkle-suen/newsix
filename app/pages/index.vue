@@ -110,10 +110,10 @@ const viewport = useViewport()
 const reqURL = useRequestURL()
 const shareUrl = computed(() => import.meta.client ? window.location.href : reqURL.href)
 
-function toggleMain() {
+/* function toggleMain() {
   const visible = !main.visible.value
   main.setParams({ is_visible: visible })
-}
+} */
 
 // Guarded access helpers to avoid early SDK store reads
 const safe = function <T>(fn: () => T, fallback: T): T {
@@ -126,7 +126,7 @@ const hapticSupportedBool = computed(() => safe(() => !!haptic.supported.value, 
 
 // Mini App
 const miniSupported = computed(() => String(safe(() => mini.supported.value, false)))
-const miniSupportedBool = computed(() => safe(() => !!mini.supported.value, false))
+/* const miniSupportedBool = computed(() => safe(() => !!mini.supported.value, false)) */
 const miniDark = computed(() => String(safe(() => mini.dark.value, false)))
 
 // Init Data
