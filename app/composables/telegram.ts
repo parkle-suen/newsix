@@ -1,17 +1,16 @@
 import { ref, computed, onMounted } from 'vue'
-import type {
-  TelegramWebApp,
-  TelegramWebAppInitData
-} from '~/types/telegram-webapp'
+
+import type { WebApp, WebAppInitData } from 'telegram-web-app'
+
 
 // Helper to get WebApp instance
-function getWebApp(): TelegramWebApp | null {
+function getWebApp(): WebApp | null {
   if (typeof window === 'undefined') return null
   return window.Telegram?.WebApp || null
 }
 
 // Shared WebApp instance
-let globalWebApp: TelegramWebApp | null = null
+let globalWebApp: WebApp | null = null
 let isInitialized = false
 
 // Initialize WebApp once
@@ -28,7 +27,7 @@ function initWebApp() {
 
 // Main composable to access Telegram WebApp
 export function useTelegramWebApp() {
-  const webApp = ref<TelegramWebApp | null>(null)
+  const webApp = ref<WebApp | null>(null)
   const isReady = ref(false)
 
   onMounted(() => {
@@ -120,7 +119,7 @@ export function useInitData() {
     initWebApp()
   })
 
-  const state = computed<TelegramWebAppInitData | undefined>(() => 
+  const state = computed<WebAppInitData | undefined>(() => 
     globalWebApp?.initDataUnsafe || undefined
   )
   

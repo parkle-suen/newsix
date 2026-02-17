@@ -14,5 +14,10 @@
     {
       "path": "./.nuxt/tsconfig.node.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "types": [
+      "telegram-web-app"
+    ] // 或 "@types/telegram-web-app"
+  }
 }

@@ -15,15 +15,15 @@
 
       <div class="space-y-3">
         <button 
-          @click="handleError"
           class="w-full bg-tg-button text-tg-button-text py-3 px-4 rounded-lg font-medium hover:opacity-90 transition-opacity"
+          @click="handleError"
         >
           {{ error?.statusCode === 404 ? 'Go Home' : 'Try Again' }}
         </button>
         
         <button 
-          @click="clearAndReload"
           class="w-full border border-tg-button text-tg-button py-3 px-4 rounded-lg font-medium hover:bg-tg-button hover:text-tg-button-text transition-colors"
+          @click="clearAndReload"
         >
           Clear Cache & Reload
         </button>

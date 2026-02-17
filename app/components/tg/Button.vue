@@ -96,22 +96,24 @@ const classes = computed(() => [
   props.class,
 ].filter(Boolean).join(' '))
 
-const haptic = useHapticFeedback()
+const hapticFeedback = useHapticFeedback()
 
 function triggerHaptic() {
   if (!props.haptic) return
   const kind = props.haptic === true ? 'selection' : props.haptic
   try {
-    if (kind === 'selection') haptic.selectionChanged()
+    if (kind === 'selection') hapticFeedback.selectionChanged()
     else if (kind.startsWith('impact-')) {
       const style = kind.split('-')[1] as 'light' | 'medium' | 'heavy'
-      haptic.impactOccurred(style)
+      hapticFeedback.impactOccurred(style)
     }
     else if (kind.startsWith('notification-')) {
       const n = kind.split('-')[1] as 'success' | 'warning' | 'error'
-      haptic.notificationOccurred(n)
+      hapticFeedback.notificationOccurred(n)
     }
-  } catch {}
+  } catch(error) {
+      console.debug('Haptic feedback not available:', error)  // 使用debug级别，生产环境通常会被过滤
+  }
 }
 
 function onClick(e: Event) {
