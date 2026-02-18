@@ -1,40 +1,55 @@
 <template>
   <div class="px-3">
-    <component 
-      :is="tag" 
-      v-bind="bind" 
-      :class="classes" 
-      :disabled="disabled || loading" 
-      @click="handleClick"
-    >
-      <Icon v-if="loading" name="i-heroicons-arrow-path-20-solid" class="h-5 w-5 animate-spin" />
-      <Icon v-if="icon && iconPosition === 'left' && !loading" :name="icon" class="h-5 w-5" />
-      <span>{{ title }}</span>
-      <Icon v-if="icon && iconPosition === 'right' && !loading" :name="icon" class="h-5 w-5" />
-    </component>
+    <component :is="tag" v-bind="bind" :class="classes" :disabled="disabled || loading" @click="onClick">
+    <Icon v-if="loading" name="i-heroicons-arrow-path-20-solid" class="h-5 w-5 animate-spin" />
+    <Icon v-if="icon && iconPosition === 'left' && !loading" :name="icon" class="h-5 w-5" />
+    <span>{{ title }}</span>
+    <Icon v-if="icon && iconPosition === 'right' && !loading" :name="icon" class="h-5 w-5" />
+  </component>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { shareURL, useHapticFeedback } from '~/composables/telegram'
+import { shareURL, useHapticFeedback  } from '~/composables/telegram'
 
 const props = withDefaults(defineProps<{
   title: string
+  /**
+   * Visual style of the button
+   * - 'primary' (default)
+   * - 'secondary' (subtle background)
+   * - 'outline' (bordered)
+   * - 'danger' | 'destructive' (red)
+   */
   status?: 'primary' | 'secondary' | 'outline' | 'danger' | 'destructive'
   icon?: string
+  /** Where to render the icon */
   iconPosition?: 'left' | 'right'
   to?: string
   href?: string
+  /** When set, clicking triggers share; falls back to link if provided. */
   shareUrl?: string
+  /** Full-width button */
   block?: boolean
+  /** Deprecated in favor of `size`, kept for back-compat */
   small?: boolean
+  /** Control size */
   size?: 'sm' | 'md' | 'lg'
+  /** Loading state disables interactions */
   loading?: boolean
+  /** Elevation shadow */
   elevated?: boolean
+  /** Uppercase label */
   uppercase?: boolean
   disabled?: boolean
   class?: string
+  /**
+   * Optional haptic feedback on click.
+   * - 'selection' (default when true)
+   * - 'impact-light' | 'impact-medium' | 'impact-heavy'
+   * - 'notification-success' | 'notification-warning' | 'notification-error'
+   */
   haptic?: boolean | 'selection' | 'impact-light' | 'impact-medium' | 'impact-heavy' | 'notification-success' | 'notification-warning' | 'notification-error'
 }>(), {
   status: 'primary',
@@ -76,6 +91,7 @@ const classes = computed(() => [
   (props.disabled || props.loading) ? 'opacity-50 pointer-events-none' : 'hover:opacity-90',
   props.elevated ? 'shadow-sm' : '',
   props.uppercase ? 'uppercase' : '',
+  // visual feedback
   'transition-transform transition-opacity duration-150 active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
   props.class,
 ].filter(Boolean).join(' '))
@@ -96,12 +112,13 @@ function triggerHaptic() {
       hapticFeedback.notificationOccurred(n)
     }
   } catch(error) {
-    console.debug('Haptic feedback not available:', error)
+      console.debug('Haptic feedback not available:', error)  // 使用debug级别，生产环境通常会被过滤
   }
 }
 
-function handleClick(e: Event) {
+function onClick(e: Event) {
   if (props.disabled || props.loading) return
+  // Haptic first for immediate feedback
   triggerHaptic()
   if (props.shareUrl) {
     e.preventDefault()
